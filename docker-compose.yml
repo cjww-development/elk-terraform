@@ -21,3 +21,24 @@ services:
       ES_JAVA_OPTS: "-Xmx256m -Xms256m"
     networks:
       - elk-net
+
+  logstash:
+    container_name: $LS_CONTAINER_NAME
+    hostname: $LS_CONTAINER_NAME
+    build:
+      context: logstash/
+      args:
+        ELK_VERSION: $ELK_VERSION
+    volumes:
+      - ./logstash/config/logstash.yml:/usr/share/logstash/config/logstash.yml:ro
+      - ./logstash/pipeline:/usr/share/logstash/pipeline:ro
+      - $LS_LOG_PATH:/usr/share/logs
+    ports:
+      - "5000:5000"
+      - "9600:9600"
+    environment:
+      LS_JAVA_OPTS: "-Xmx256m -Xms256m"
+    networks:
+      - elk-net
+    depends_on:
+      - elasticsearch
