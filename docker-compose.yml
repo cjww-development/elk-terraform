@@ -8,10 +8,7 @@ services:
   elasticsearch:
     container_name: $ES_CONTAINER_NAME
     hostname: $ES_CONTAINER_NAME
-    build:
-      context: elasticsearch/
-      args:
-        ELK_VERSION: $ELK_VERSION
+    image: docker.elastic.co/elasticsearch/elasticsearch:$ELK_VERSION
     volumes:
       - ./elasticsearch/config/elasticsearch.yml:/usr/share/elasticsearch/config/elasticsearch.yml:ro
     ports:
@@ -25,10 +22,7 @@ services:
   logstash:
     container_name: $LS_CONTAINER_NAME
     hostname: $LS_CONTAINER_NAME
-    build:
-      context: logstash/
-      args:
-        ELK_VERSION: $ELK_VERSION
+    image: docker.elastic.co/logstash/logstash:$ELK_VERSION
     volumes:
       - ./logstash/config/logstash.yml:/usr/share/logstash/config/logstash.yml:ro
       - ./logstash/pipeline:/usr/share/logstash/pipeline:ro
@@ -38,6 +32,19 @@ services:
       - "9600:9600"
     environment:
       LS_JAVA_OPTS: "-Xmx256m -Xms256m"
+    networks:
+      - elk-net
+    depends_on:
+      - elasticsearch
+
+  kibana:
+    container_name: $KB_CONTAINER_NAME
+    hostname: $KB_CONTAINER_NAME
+    image: docker.elastic.co/kibana/kibana:$ELK_VERSION
+    volumes:
+      - ./kibana/config/:/usr/share/kibana/config:ro
+    ports:
+      - "5601:5601"
     networks:
       - elk-net
     depends_on:
