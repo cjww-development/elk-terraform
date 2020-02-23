@@ -1,0 +1,34 @@
+#==========================  Modules configuration ============================
+metricbeat.modules:
+
+#------------------------------- Docker Module -------------------------------
+# - module: mongodb
+#   metricsets: ["dbstats", "status", "collstats", "metrics", "replstatus"]
+#   hosts: ["mongo:27017"]
+#   enabled: true
+#   period: 10s
+
+- module: docker
+  metricsets: ["container", "cpu", "diskio", "healthcheck", "info", "image", "memory", "network"]
+  hosts: ["unix:///var/run/docker.sock"]
+  enabled: true
+  period: 10s
+
+# - module: rabbitmq
+#   metricsets:
+#     - node
+#     - queue
+#     - connection
+#   period: 10s
+#   hosts: ["rabbitmq:15672"]
+#   enabled: true
+#   username: root
+#   password: Shield616
+
+#-------------------------- Elasticsearch output -------------------------------
+output.elasticsearch:
+  hosts: ['elasticsearch:9200']
+  username: elastic
+  password: local-dev
+
+setup.kibana.host: 'kibana:5601'

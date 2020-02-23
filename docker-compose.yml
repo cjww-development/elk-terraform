@@ -16,6 +16,7 @@ services:
       - "9300:9300"
     environment:
       ES_JAVA_OPTS: "-Xmx256m -Xms256m"
+      ELASTIC_PASSWORD: "local-dev"
     networks:
       - elk-net
 
@@ -49,3 +50,16 @@ services:
       - elk-net
     depends_on:
       - elasticsearch
+
+  beats:
+    container_name: $MB_CONTAINER_NAME
+    hostname: $MB_CONTAINER_NAME
+    image: docker.elastic.co/beats/metricbeat:$ELK_VERSION
+    volumes:
+      - ./beats/config/metricbeat.yml:/usr/share/metricbeat/metricbeat.yml:ro
+      - /var/run/docker.sock:/var/run/docker.sock
+    environment:
+      ES_JAVA_OPTS: "-Xmx256m -Xms256m"
+    user: root
+    networks:
+      - elk-net
