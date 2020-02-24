@@ -2,11 +2,11 @@
 metricbeat.modules:
 
 #------------------------------- Docker Module -------------------------------
-# - module: mongodb
-#   metricsets: ["dbstats", "status", "collstats", "metrics", "replstatus"]
-#   hosts: ["mongo:27017"]
-#   enabled: true
-#   period: 10s
+- module: mongodb
+  metricsets: ["dbstats", "status", "collstats", "metrics", "replstatus"]
+  hosts: ["hub-mongo.local:27017", "admin-mongo.local:27017"]
+  enabled: true
+  period: 10s
 
 - module: docker
   metricsets: ["container", "cpu", "diskio", "healthcheck", "info", "image", "memory", "network"]
@@ -14,16 +14,53 @@ metricbeat.modules:
   enabled: true
   period: 10s
 
-# - module: rabbitmq
+- module: rabbitmq
+  metricsets:
+    - node
+    - queue
+    - connection
+  period: 10s
+  hosts: ["rabbitmq.local:15672"]
+  enabled: true
+  username: root
+  password: local-dev
+
+- module: elasticsearch
+  metricsets:
+   - node
+   - node_stats
+  period: 10s
+  hosts: ["elasticsearch:9200"]
+  username: "elastic"
+  password: "local-dev"
+
+# - module: postgresql
 #   metricsets:
-#     - node
-#     - queue
-#     - connection
+#    - database
+#    - bgwriter
+#    - activity
 #   period: 10s
-#   hosts: ["rabbitmq:15672"]
-#   enabled: true
-#   username: root
-#   password: Shield616
+#   hosts: ["postgres://localhost:5432"]
+  #username: user
+  #password: pass
+
+- module: kibana
+  metricsets:
+   - status
+  period: 10s
+  hosts: ["kibana:5601"]
+  #basepath: ""
+  #username: "user"
+  #password: "secret"
+
+- module: logstash
+  metricsets:
+   - node
+   - node_stats
+  period: 10s
+  hosts: ["logstash:9600"]
+  #username: "user"
+  #password: "secret"
 
 #-------------------------- Elasticsearch output -------------------------------
 output.elasticsearch:

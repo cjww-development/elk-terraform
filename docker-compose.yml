@@ -2,6 +2,7 @@ version: "3.7"
 
 networks:
   elk-net:
+    name: elk-net
     driver: bridge
 
 services:
