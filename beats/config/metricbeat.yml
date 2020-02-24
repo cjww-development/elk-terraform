@@ -34,15 +34,15 @@ metricbeat.modules:
   username: "elastic"
   password: "local-dev"
 
-# - module: postgresql
-#   metricsets:
-#    - database
-#    - bgwriter
-#    - activity
-#   period: 10s
-#   hosts: ["postgres://localhost:5432"]
-  #username: user
-  #password: pass
+- module: postgresql
+  metricsets:
+   - database
+   - bgwriter
+   - activity
+  period: 10s
+  hosts: ["postgres://gitea-db.local:5432"]
+  username: user
+  password: pass
 
 - module: kibana
   metricsets:
